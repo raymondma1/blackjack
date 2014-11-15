@@ -36,5 +36,5 @@ class window.HandView extends Backbone.View
     @$el.html @template @collection
     @$el.append @collection.map (card) ->
       new CardView(model: card).$el
-    @$('.score').text @collection.bestscore()
+    @$('.score').text @collection.scoreToDisplay()
 

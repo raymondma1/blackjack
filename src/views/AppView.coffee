@@ -17,18 +17,32 @@ class window.AppView extends Backbone.View
     @render()
     window.setTimeout(this.checkBlackJack.bind(this),100)
     @model.get('playerHand').on 'BlackJack busted', =>
-      console.log 'hi'
       @model.set 'playerHand', @model.get('deck').dealPlayer()
       @model.set 'dealerHand', @model.get('deck').dealDealer()
       @initialize()
     @model.get('dealerHand').on 'BlackJack busted', =>
-      console.log 'hi'
       @model.set 'playerHand', @model.get('deck').dealPlayer()
       @model.set 'dealerHand', @model.get('deck').dealDealer()
       @initialize()
+    @model.get('dealerHand').on 'ended', =>
+      pHand = @model.get('playerHand').bestScore()
+      dHand = @model.get('dealerHand').bestScore()
+      console.log('player: ', pHand, 'dealer: ', dHand)
+      if pHand > dHand
+        alert('you win!')
+      else if dHand > pHand
+        alert('dealer wins!')
+      else
+        alert('push')
+      @restart()
 
   render: ->
     @$el.children().detach()
     @$el.html @template()
     @$('.player-hand-container').html new HandView(collection: @model.get 'playerHand').el
     @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
+
+  restart: ->
+    @model.set 'playerHand', @model.get('deck').dealPlayer()
+    @model.set 'dealerHand', @model.get('deck').dealDealer()
+    @initialize()
