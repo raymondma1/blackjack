@@ -24,6 +24,7 @@ class window.Hand extends Backbone.Collection
 
       # dealer hits
     #compare scores and note the winner.
+    @busted()
 
   hasAce: -> @reduce (memo, card) ->
     memo or card.get('value') is 1
