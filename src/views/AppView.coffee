@@ -5,6 +5,7 @@ class window.AppView extends Backbone.View
 
     <div class="player-hand-container"></div>
     <div class="dealer-hand-container"></div>
+    <div class="deckCards"></div>
   '
 
   events:
@@ -19,6 +20,7 @@ class window.AppView extends Backbone.View
   initialize: ->
     @render()
     window.setTimeout(this.checkBlackJack.bind(this),100)
+    # @model.get('deck').on 'remove', => @render()
     @model.get('playerHand').on 'BlackJack busted', =>
       @model.get('dealerHand').at(0).flip()
       @$el.find('.hit-button').remove()
@@ -43,9 +45,11 @@ class window.AppView extends Backbone.View
     @$el.html @template()
     @$('.player-hand-container').html new HandView(collection: @model.get 'playerHand').el
     @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
+    @$('.deckCards').html new DeckView(collection: @model.get 'deck').el
 
   restart: ->
-    @model.set 'deck', deck = new Deck()
+    if @model.get('deck').length < 36
+     @model.set 'deck', deck = new Deck()
     @model.set 'playerHand', @model.get('deck').dealPlayer()
     @model.set 'dealerHand', @model.get('deck').dealDealer()
     @initialize()
