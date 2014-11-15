@@ -8,14 +8,16 @@ class window.HandView extends Backbone.View
     @render()
     # bust logic goes here
     @collection.on 'BlackJack', =>
-      alert('BlackJack!')
+      alert('BlackJack from handview!')
 
     @collection.on 'add', =>
-      if @collection.minScore() > 21
-        alert('busted')
+      if @collection.isBusted()
+        # alert('busted')
+        @collection.busted()
       # if @collection.hasBlackJack()
       #   @collection.blackJack()
-
+    @collection.on 'busted', =>
+      alert('busted')
 
     # if @collection.hasBlackJack()
     #   console.log 'has BlackJack'

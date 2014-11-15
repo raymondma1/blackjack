@@ -15,9 +15,17 @@ class window.AppView extends Backbone.View
 
   initialize: ->
     @render()
-    @model.on 'BlackJack', =>
-      alert('BlackJack!')
     window.setTimeout(this.checkBlackJack.bind(this),100)
+    @model.get('playerHand').on 'BlackJack busted', =>
+      console.log 'hi'
+      @model.set 'playerHand', @model.get('deck').dealPlayer()
+      @model.set 'dealerHand', @model.get('deck').dealDealer()
+      @initialize()
+    @model.get('dealerHand').on 'BlackJack busted', =>
+      console.log 'hi'
+      @model.set 'playerHand', @model.get('deck').dealPlayer()
+      @model.set 'dealerHand', @model.get('deck').dealDealer()
+      @initialize()
 
   render: ->
     @$el.children().detach()

@@ -33,6 +33,11 @@ class window.Hand extends Backbone.Collection
     memo or _([0, 10, 11, 12]).contains(card.get('value'))# is 0 or 10 or 11 or 12
   , 0
 
+  isBusted: -> return @minScore() > 21
+
+  busted: ->
+    @trigger 'busted',@
+
   hasBlackJack: ->
     return @length == 2 and @hasFace() and @hasAce()#@scores()[1] == 21
       #bestscore = 'Blackjack!'
