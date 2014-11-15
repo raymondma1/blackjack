@@ -1,6 +1,8 @@
 class window.AppView extends Backbone.View
   template: _.template '
     <button class="hit-button">Hit</button> <button class="stand-button">Stand</button>
+    <button class="reset-button">Reset</button>
+
     <div class="player-hand-container"></div>
     <div class="dealer-hand-container"></div>
   '
@@ -8,6 +10,7 @@ class window.AppView extends Backbone.View
   events:
     'click .hit-button': -> @model.get('playerHand').hit()
     'click .stand-button': -> @model.get('dealerHand').stand()
+    'click .reset-button': -> @restart()
 
   checkBlackJack: ->
     if @model.get('playerHand').hasBlackJack() or @model.get('dealerHand').hasBlackJack()
@@ -17,24 +20,23 @@ class window.AppView extends Backbone.View
     @render()
     window.setTimeout(this.checkBlackJack.bind(this),100)
     @model.get('playerHand').on 'BlackJack busted', =>
-      @model.set 'playerHand', @model.get('deck').dealPlayer()
-      @model.set 'dealerHand', @model.get('deck').dealDealer()
-      @initialize()
+      @model.get('dealerHand').at(0).flip()
+      @$el.find('.hit-button').remove()
+      @$el.find('.stand-button').remove()
     @model.get('dealerHand').on 'BlackJack busted', =>
-      @model.set 'playerHand', @model.get('deck').dealPlayer()
-      @model.set 'dealerHand', @model.get('deck').dealDealer()
-      @initialize()
+      @$el.find('.hit-button').remove()
+      @$el.find('.stand-button').remove()
     @model.get('dealerHand').on 'ended', =>
       pHand = @model.get('playerHand').bestScore()
       dHand = @model.get('dealerHand').bestScore()
-      console.log('player: ', pHand, 'dealer: ', dHand)
       if pHand > dHand
         alert('you win!')
       else if dHand > pHand
         alert('dealer wins!')
       else
         alert('push')
-      @restart()
+      @$el.find('.hit-button').remove()
+      @$el.find('.stand-button').remove()
 
   render: ->
     @$el.children().detach()
@@ -43,6 +45,7 @@ class window.AppView extends Backbone.View
     @$('.dealer-hand-container').html new HandView(collection: @model.get 'dealerHand').el
 
   restart: ->
+    @model.set 'deck', deck = new Deck()
     @model.set 'playerHand', @model.get('deck').dealPlayer()
     @model.set 'dealerHand', @model.get('deck').dealDealer()
     @initialize()

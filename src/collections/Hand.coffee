@@ -41,7 +41,6 @@ class window.Hand extends Backbone.Collection
       #bestscore = 'Blackjack!'
 
   blackJack: ->
-    alert('triggering blackjack event')
     @trigger 'BlackJack',@
 
   allRevealed: -> @every (card) -> card.get 'revealed'
