@@ -6,6 +6,12 @@ class window.HandView extends Backbone.View
   initialize: ->
     @collection.on 'add remove change', => @render()
     @render()
+    # bust logic goes here
+    @collection.on 'add', =>
+      if @collection.minScore() > 21
+        alert('busted')
+        # start a new game
+    # blackjack logic goes here
 
   render: ->
     @$el.children().detach()
